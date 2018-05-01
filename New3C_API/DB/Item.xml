@@ -167,7 +167,68 @@
         <Parameter Name="@RequestXML" Direction="Input"  Type="Xml" />
       </PreParameters>
     </DbSql>
+
+    <DbSql CommandName="SaveItemShippingSetting" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+          INSERT INTO New3c_Item_ShippingSetting Values (@ItemNumber,@ShippingAddress,@Contacts,@Tel,@ShippingMethod,@ShippingRate)
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@ItemNumber" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@ShippingAddress" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@Contacts" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@Tel" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@ShippingMethod" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@ShippingRate" Direction="Input"  Type="AnsiString" />
+      </PreParameters>
+    </DbSql>
+
+    <DbSql CommandName="ItemListQuery" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+         DECLARE @SQL NVARCHAR(1000) = N'' 
+
+        --根据查询条件拼装 SQL 查询条件
+
+        DECLARE @QueryCondition NVARCHAR(MAX) = N''
+        IF(ISNULL(@ItemNumber,'')<> '')
+        BEGIN
+        SET @QueryCondition += N' AND ItemNumber = @ItemNumber'
+        END
+        IF(ISNULL(@ItemName,'')<> '')
+        BEGIN
+        SET @QueryCondition += N' AND ItemName LIKE N''%'+@ItemName+'%'''
+        END
+
+        Begin
+        SET @SQL+=N'
+        SELECT *
+        FROM New3c_Items
+        WHERE ItemStatus = @ItemStatus '+@QueryCondition+'
+        '
+        PRINT @SQL
+        END
+
+        EXECUTE sp_executesql @SQL,
+        N'@ItemStatus nvarchar(10)
+        ,@ItemName nvarchar(16)
+        ,@ItemNumber int',
+        @ItemStatus ,
+        @ItemName
+        ,@ItemNumber
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@ItemNumber" Direction="Input"  Type="Int32" />
+        <Parameter Name="@ItemName" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@ItemStatus" Direction="Input"  Type="AnsiString" />
+      </PreParameters>
+    </DbSql>
+
     
+
+
 
     <DbSql CommandName="GetItemCategoryImage" Type="Text" ConnectionName="New3C_DataBase">
       <Text>

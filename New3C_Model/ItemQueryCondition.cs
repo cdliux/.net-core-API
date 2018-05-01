@@ -8,6 +8,6 @@ namespace New3C_Model
     {
         public int ItemNumber { get; set; }
         public string ItemName { get; set; }
-        public bool ItemStatus { get; set; }
+        public string ItemStatus { get; set; }
     }
 }

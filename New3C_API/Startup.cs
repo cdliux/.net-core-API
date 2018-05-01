@@ -75,6 +75,10 @@ namespace New3C_API
             services.AddSingleton<ShoppingCartService, ShoppingCartServicelmpl>();
             services.AddSingleton<ItemCategoryDataService, ItemCategoryDataServicelmpl>();
             services.AddSingleton<ItemCategoryService, ItemCategoryServicelmpl>();
+            services.AddSingleton<IItemShippingSettingDataService, ItemShippingSettingDataSevicelmpl>();
+            services.AddSingleton<IItemShippingSettingServices, ItemShippingSettingServicelmpl>();
+            services.AddSingleton<IItemListSearchDataService, ItemListSearchDataServicelmpl>();
+            services.AddSingleton<IItemListSearchService, ItemListSearchServicelmpl>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
