@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ItemCategorylmpl.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\New3C_DataServices\New3C_DataService.csproj" />
+    <ProjectReference Include="..\New3C_Model\New3C_Model.csproj" />
+    <ProjectReference Include="..\New3C_Service\New3C_Service.csproj" />
+  </ItemGroup>
+
+</Project>

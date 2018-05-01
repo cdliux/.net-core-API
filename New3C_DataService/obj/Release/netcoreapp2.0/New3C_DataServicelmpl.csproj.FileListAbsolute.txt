@@ -1,0 +1,13 @@
+D:\毕业设计\API\New3C_API\New3C_DataService\bin\Release\netcoreapp2.0\New3C_DataServicelmpl.deps.json
+D:\毕业设计\API\New3C_API\New3C_DataService\bin\Release\netcoreapp2.0\New3C_DataServicelmpl.dll
+D:\毕业设计\API\New3C_API\New3C_DataService\bin\Release\netcoreapp2.0\New3C_DataServicelmpl.pdb
+D:\毕业设计\API\New3C_API\New3C_DataService\bin\Release\netcoreapp2.0\New3C_DataService.dll
+D:\毕业设计\API\New3C_API\New3C_DataService\bin\Release\netcoreapp2.0\New3C_Model.dll
+D:\毕业设计\API\New3C_API\New3C_DataService\bin\Release\netcoreapp2.0\New3C_DataService.pdb
+D:\毕业设计\API\New3C_API\New3C_DataService\bin\Release\netcoreapp2.0\New3C_Model.pdb
+D:\毕业设计\API\New3C_API\New3C_DataService\obj\Release\netcoreapp2.0\New3C_DataServicelmpl.csprojResolveAssemblyReference.cache
+D:\毕业设计\API\New3C_API\New3C_DataService\obj\Release\netcoreapp2.0\New3C_DataServicelmpl.csproj.CoreCompileInputs.cache
+D:\毕业设计\API\New3C_API\New3C_DataService\obj\Release\netcoreapp2.0\New3C_DataServicelmpl.AssemblyInfoInputs.cache
+D:\毕业设计\API\New3C_API\New3C_DataService\obj\Release\netcoreapp2.0\New3C_DataServicelmpl.AssemblyInfo.cs
+D:\毕业设计\API\New3C_API\New3C_DataService\obj\Release\netcoreapp2.0\New3C_DataServicelmpl.dll
+D:\毕业设计\API\New3C_API\New3C_DataService\obj\Release\netcoreapp2.0\New3C_DataServicelmpl.pdb

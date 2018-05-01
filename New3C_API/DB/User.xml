@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DbConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SqlConfigs>
+    <DbSql CommandName="ConfirmUserLogin" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+        SELECT TOP 1 * 
+        FROM DBO.New3c_Users
+        WITH (NOLOCK)
+        WHERE UserName=@Name and Password=@Pwd
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@Name" Direction="Input" Type="AnsiString" />
+        <Parameter Name="@Pwd" Direction="Input" Type="AnsiString" />
+      </PreParameters>
+    </DbSql>
+  </SqlConfigs>
+</DbConfig>

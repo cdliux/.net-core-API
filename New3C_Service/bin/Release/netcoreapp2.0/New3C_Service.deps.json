@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.0",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.0": {
+      "New3C_Service/1.0.0": {
+        "dependencies": {
+          "New3C_Model": "1.0.0"
+        },
+        "runtime": {
+          "New3C_Service.dll": {}
+        }
+      },
+      "New3C_Model/1.0.0": {
+        "runtime": {
+          "New3C_Model.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "New3C_Service/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "New3C_Model/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

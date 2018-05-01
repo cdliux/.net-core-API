@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\ItemQuery.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Files\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\New3C_DataServices\New3C_DataService.csproj" />
+    <ProjectReference Include="..\New3C_DataService\New3C_DataServicelmpl.csproj" />
+    <ProjectReference Include="..\New3C_Model\New3C_Model.csproj" />
+    <ProjectReference Include="..\New3C_Servicelmpl\New3C_Servicelmpl.csproj" />
+    <ProjectReference Include="..\New3C_Service\New3C_Service.csproj" />
+  </ItemGroup>
+
+</Project>

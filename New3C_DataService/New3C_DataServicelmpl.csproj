@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="VIC.DataAccess.Config" Version="2.0.10" />
+    <PackageReference Include="VIC.DataAccess.MSSql" Version="2.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\New3C_DataServices\New3C_DataService.csproj" />
+    <ProjectReference Include="..\New3C_Model\New3C_Model.csproj" />
+  </ItemGroup>
+
+</Project>

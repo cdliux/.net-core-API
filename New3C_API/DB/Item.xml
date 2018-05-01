@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DbConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ConnectionStrings>
+    <DataConnection Name="New3C_DataBase" ConnectionString="Data Source=DESKTOP-SS22FNL\SQLEXPRESS;Initial Catalog=New3C_DataBase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" />
+  </ConnectionStrings>
+  <SqlConfigs>
+    
+    <DbSql CommandName="GetFeatureItemList" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+        SELECT TOP 4 A.ItemNumber,A.StoreId,A.ItemName,A.Price,A.PromotionPrice,A.IsPromotionItem,B.ItemImageUrl
+        FROM New3c_Items A JOIN New3c_ItemImage B
+        ON A.ItemStatus =N'Active' AND A.ItemNumber=B.ItemNumber AND A.IsPromotionItem = 1
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@Name" Direction="Input"  Type="AnsiString" />
+      </PreParameters>
+    </DbSql>
+    
+    <DbSql CommandName="GetNavItemList" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+        SELECT TOP 4 ItemNumber,ItemImageUrl  FROM New3c_ItemImage WITH(NOLOCK)
+        WHERE IsNavBar = 1
+      ]]>
+      </Text>
+    </DbSql>
+    
+    <DbSql CommandName="GetItemCategoryPrice" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+        SELECT TOP 20 CategoryPicID,ItemsCategoryItemName,ItemsCategoryPrice FROM New3c_ItemsCategoryPrice  WITH(NOLOCK)
+        WHERE ItemNumber = @ItemNum
+        Order By CategoryPicID ASC
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@ItemNum" Direction="Input"  Type="AnsiString" />
+      </PreParameters>
+    </DbSql>
+
+    <DbSql CommandName="AddNewItem" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+         INSERT INTO New3c_Items VALUES (@StoreId,@ItemName,@SubCategoryId,@Price,NULL,@Inventory,NULL,@ItemStatus,0,@IsPromotionItem,@CategoryId,@Indate)
+         
+         SELECT TOP 1 ItemNumber FROM New3c_Items Order By InDate Desc
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@StoreId" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@ItemName" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@SubCategoryId" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@Price" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@Inventory" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@ItemStatus" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@IsPromotionItem" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@CategoryId" Direction="Input"  Type="Int32" />
+        <Parameter Name="@Indate" Direction="Input"  Type="AnsiString" />
+      </PreParameters>
+    </DbSql>
+
+    <DbSql CommandName="AddNewItemImage" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+        DECLARE @TempList TABLE
+        (
+	        ItemNumber int
+          ,ItemImageUrl nvarchar(100)
+           ,IsPrimary BIT
+          ,IsNavBar BIT
+          ,IsNew  BIT
+	        ,CategoryPicID varchar(6)
+        )
+        
+        INSERT INTO @TempList
+        (
+	        ItemNumber
+          ,ItemImageUrl
+           ,IsPrimary 
+          ,IsNavBar 
+          ,IsNew  
+	        ,CategoryPicID
+        )
+        SELECT ItemNumber = T.c.value('(ItemNumber/text())[1]','int')
+	           ,ItemImageUrl = T.c.value('(ItemImageUrl/text())[1]','nvarchar(100)')
+             ,IsPrimary=0
+             ,IsNavBar=0
+             ,IsNew=0
+	           ,CategoryPicID = T.c.value('(CategoryPicID/text())[1]','varchar(6)')
+        FROM @RequestXML.nodes('/ItemImageList/ItemImage') T(c)
+        
+        INSERT INTO New3c_ItemImage 
+        (
+         ItemNumber
+          ,ItemImageUrl
+          ,IsPrimary
+          ,IsNavBar
+          ,IsNew
+	        ,CategoryPicID
+        )
+        SELECT ItemNumber
+	           ,ItemImageUrl
+             ,IsPrimary=0
+             ,IsNavBar=0
+             ,IsNew=0
+	           ,CategoryPicID
+        FROM @TempList
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@RequestXML" Direction="Input"  Type="Xml" />
+      </PreParameters>
+    </DbSql>
+
+    <DbSql CommandName="AddSubItem" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+       DECLARE @TempList TABLE
+    (
+    ItemNumber int
+        ,StoreId int
+        ,ItemsCategoryName nvarchar(16)
+        ,ItemsCategoryPrice decimal(10,2)
+        ,ItemsCategoryPromotionPrice decimal(10,2)
+	    ,CategoryPicID varchar(6)
+    )
+        
+    INSERT INTO @TempList
+    (
+	    ItemNumber
+        ,StoreId
+        ,ItemsCategoryName
+        ,ItemsCategoryPrice
+        ,ItemsCategoryPromotionPrice
+	    ,CategoryPicID
+    )
+    SELECT ItemNumber = T.c.value('(ItemNumber/text())[1]','int')
+	        ,StoreId = T.c.value('(StoreId/text())[1]','int')
+			,ItemsCategoryName = T.c.value('(ItemsCategoryName/text())[1]','nvarchar(16)')
+            ,ItemsCategoryPrice=T.c.value('(ItemsCategoryPrice/text())[1]','decimal(10,2)')
+            ,ItemsCategoryPromotionPrice=NULL
+	        ,CategoryPicID = T.c.value('(CategoryPicID/text())[1]','varchar(6)')
+    FROM @RequestXML.nodes('/SubItemList/Item') T(c)
+        
+        INSERT INTO New3c_ItemsCategoryPrice 
+        (
+         ItemNumber
+          ,StoreId
+          ,ItemsCategoryItemName
+          ,ItemsCategoryPrice
+          ,ItemsCategoryPromotionPrice
+	        ,CategoryPicID
+        )
+        SELECT ItemNumber
+          ,StoreId
+          ,ItemsCategoryName
+          ,ItemsCategoryPrice
+          ,ItemsCategoryPromotionPrice
+	        ,CategoryPicID
+        FROM @TempList
+
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@RequestXML" Direction="Input"  Type="Xml" />
+      </PreParameters>
+    </DbSql>
+    
+
+    <DbSql CommandName="GetItemCategoryImage" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+          SELECT TOP 10 ItemNumber,ItemImageUrl,CategoryPicID  FROM  New3c_ItemImage
+          WHERE CategoryPicID = @CateGoryID
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@CateGoryID" Direction="Input"  Type="AnsiString" />
+      </PreParameters>
+    </DbSql>
+    
+    <DbSql CommandName="AddToShoppingCart" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+          INSERT INTO New3c_ShoppingCart Values (@ItemNumber,@ItemAmount,@UserID,@CategoryPicID)
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@ItemNumber" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@ItemAmount" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@UserID" Direction="Input"  Type="AnsiString" />
+        <Parameter Name="@CategoryPicID" Direction="Input"  Type="AnsiString" />
+      </PreParameters>
+    </DbSql>
+    
+    <DbSql CommandName="GetShoppingCartList" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+        SELECT A.Amount ,A.CategoryPicID ,B.ItemName,B.ItemNumber,B.Price , B.StoreId, C.ItemImageUrl 
+          FROM [New3c_ShoppingCart] A ,New3c_Items B ,New3c_ItemImage C
+          WHERE B.ItemNumber =A.ItemNumber AND A.UserID =@Id AND A.CategoryPicID = C.CategoryPicID
+      ]]>
+      </Text>
+      <PreParameters>
+        <Parameter Name="@Id" Direction="Input"  Type="AnsiString" />
+      </PreParameters>
+    </DbSql>
+
+    <DbSql CommandName="GetItemDomainLsit" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[
+        select top 10 * from New3c_Item_Domain
+      ]]>
+      </Text>
+    </DbSql>
+
+    <DbSql CommandName="GetItemCategoryLsit" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[       
+        select top 10 * from New3c_Item_Category
+      ]]>
+      </Text>
+    </DbSql>
+    <DbSql CommandName="GetItemSubCategoryLsit" Type="Text" ConnectionName="New3C_DataBase">
+      <Text>
+        <![CDATA[       
+           select top 100 * from New3c_Item_SubCategory
+      ]]>
+      </Text>
+    </DbSql>
+  </SqlConfigs>
+</DbConfig>
